@@ -11,7 +11,8 @@ if (current_mode.mode === mode.LCP_FCP){
 
 if (current_mode.mode === mode.TBT){
     window.setTimeout(()=>{showFCPBox()
-        simulateBlocking(current_mode.tbt)
+        window.setImmediate(()=>{simulateBlocking(current_mode.tbt)})
+        
     }, current_mode.fcp)
     
     return
