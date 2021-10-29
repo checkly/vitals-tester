@@ -1,5 +1,12 @@
 const { showFCPBox, showLCPBox } = require('./lcp-fcp')
+const {mode, getMode} = require('./urlparser')
+
+const current_mode = getMode()
+if (current_mode.mode === mode.LCP_FCP){
+    window.setTimeout(showLCPBox, current_mode.lcp)
+    window.setTimeout(showFCPBox, current_mode.fcp)
+    return
+}
 
 
-window.setTimeout(showLCPBox, 5000)
-window.setTimeout(showFCPBox, 0)
+document.write('none')
