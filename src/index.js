@@ -1,6 +1,7 @@
 const { showFCPBox, showLCPBox } = require('./lcp-fcp')
 const {mode, getMode} = require('./urlparser')
 const {simulateBlocking} = require('./tbt') 
+const {simulateCls} = require('./cls')
 
 const current_mode = getMode()
 if (current_mode.mode === mode.LCP_FCP){
@@ -15,4 +16,9 @@ if (current_mode.mode === mode.TBT){
     return
 }
 
+if (current_mode.mode === mode.CLS){
+    window.setTimeout(showFCPBox, 0)
+    simulateCls(current_mode.cls)
+    return
+}
 document.write('none')
