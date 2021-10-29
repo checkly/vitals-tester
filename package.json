@@ -1,0 +1,27 @@
+{
+  "name": "vitals-tester",
+  "version": "1.0.0",
+  "description": "Create defined web vital results",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config prod.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/checkly/vitals-tester.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/checkly/vitals-tester/issues"
+  },
+  "homepage": "https://github.com/checkly/vitals-tester#readme",
+  "dependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.61.0"
+  },
+  "devDependencies": {
+    "html-inline-script-webpack-plugin": "^2.0.2",
+    "webpack-cli": "^4.9.1"
+  }
+}
