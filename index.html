@@ -11,14 +11,15 @@
         </style>
     </head>
     <body> 
-        <div id="shift"></div>
-        <svg id ="lcp1" width="100%" height="25%" xmlns="http://www.w3.org/2000/svg" stroke="red" fill="grey">
-            <rect width="100%" height="100%" />
-        </svg>
+        <div id="content"></div>
     </body>
     <script>
+        function showFCPBox(){
+            const p = document.createElement('p')
+            p.textContent='a'
+          var el = document.getElementById('content').appendChild(p)
+        }
         function showLCPBox() {
-            console.log("show")
             const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
             svg.setAttribute('id', 'lcp')
             svg.setAttribute('width', '100%')
@@ -30,10 +31,13 @@
             rect.setAttribute('width', '100%')
             rect.setAttribute('height', '100%')
             svg.appendChild(rect)
-          var el = document.getElementById('shift').appendChild(svg)
+            const p = document.createElement('p')
+            p.textContent='hisadfsafasdfsdafsdafsdafdsafsdafds'
+          var el = document.getElementById('content').appendChild(p)
           
         }
-        window.setTimeout(showLCPBox, 2000)
+        window.setTimeout(showLCPBox, 5000)
+        window.setTimeout(showFCPBox, 0)
         
                 </script>
 </html>
