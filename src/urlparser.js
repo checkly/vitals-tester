@@ -1,5 +1,6 @@
 const mode = {
-    LCP_FCP:'lcp_fcp'
+    LCP_FCP:'lcp_fcp',
+    TBT: 'tbt'
 }
 
 function getMode(){
@@ -11,6 +12,12 @@ function getMode(){
 
     if (lcp!==null && lcp_number!== NaN) {
         return {mode: mode.LCP_FCP,lcp: lcp_number, fcp: fcp_number}
+    }
+
+    const tbt = urlParams.get('tbt')
+    tbt_number = new Number(tbt)
+    if (tbt !== null && tbt_number!== NaN){
+        return {mode: mode.TBT,tbt: tbt_number, fcp: fcp_number}
     }
 
 }
