@@ -103,9 +103,14 @@ if (create>5){
     const config = howMany(desiredCls)
 if (horizontal()){
     console.log("horizontal")
+    for (let n = 0; n<config.count; n++)
     createHorizontalContentfulBlock()
-    const el = document.getElementsByTagName('p')[0]
-move(el,100 )}
+ const elems = document.getElementsByTagName('p')
+    elems[0].setAttribute('id','partial')
+    elems[0].setAttribute('max-steps',config.extraSteps)
+    elems[0].setAttribute('steps',0)
+moveAll(elems, 20)
+}
     else{
         console.log("vertical")
         
