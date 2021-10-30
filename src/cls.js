@@ -1,7 +1,8 @@
 
    const intViewportHeight = document.documentElement.clientHeight
    const intViewportWidth = document.documentElement.clientWidth
-   const delay = 5
+   // if we go too fast here, it will create flaky metric results
+   let delay = 50
 
 function largestDimension() {
     return Math.max(intViewportHeight, intViewportWidth)
@@ -51,21 +52,32 @@ function createVerticalContentfulBlock(){
     document.getElementById('content').appendChild(p)
 }
 
+
+async function moveAll(elems, times){
+    for (let i = 0; i<times; i++)
+    for (el of elems){
+        await moveBy(el,5)
+    }
+    
+        
+    
+}
+
 async function move(el, times){
     for (let i = 0; i<times; i++)
         await moveBy(el,5)
     
 }
- function moveBy(el, percent) {
-     
-    return new Promise((resolve)=>{
-        
-    window.setTimeout(()=>{
-        console.log(addPercent(percent, el.style.left))
-    
-       
-            
-            
+ function moveBy(el, percent) {  
+     if (el.getAttribute('id')==='partial'){
+        const max = new Number(el.getAttribute('max-steps'))
+        let current = new Number(el.getAttribute('steps') )
+        current++
+        if (current>max) return
+        el.setAttribute('steps', current)
+     }
+    return new Promise((resolve)=>{        
+    window.setTimeout(()=>{   
             if (!horizontal())
             el.style.left = addPercent(percent, el.style.left)
             else 
@@ -74,19 +86,40 @@ async function move(el, times){
         }, delay)
     })
 }
-
-function simulateCls(desiredCls) {
+function howMany(desiredCls){
+const fullRuns = Math.floor(desiredCls/0.095)
+const extraSteps = Math.round((desiredCls - fullRuns*0.095)/0.005)
+let create = fullRuns
+if (extraSteps>0) {
+    create++
+}
+if (create>5){
+    delay=20
+}
+    return {fullRuns: fullRuns, extraSteps: extraSteps, count:create, delay: delay}
+}
+ function simulateCls(desiredCls) {
     console.log(desiredCls)
+    const config = howMany(desiredCls)
 if (horizontal()){
     console.log("horizontal")
     createHorizontalContentfulBlock()
     const el = document.getElementsByTagName('p')[0]
-move(el, 5)}
+move(el,100 )}
     else{
         console.log("vertical")
+        
+       
+        for (let n = 0; n<config.count; n++)
         createVerticalContentfulBlock()
-        const el = document.getElementsByTagName('p')[0]
-move(el, 5)}
+     const elems = document.getElementsByTagName('p')
+        elems[0].setAttribute('id','partial')
+        elems[0].setAttribute('max-steps',config.extraSteps)
+        elems[0].setAttribute('steps',0)
+moveAll(elems, 20)
+
+
+}
 
 
 
