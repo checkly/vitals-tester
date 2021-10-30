@@ -1,6 +1,7 @@
 const mode = {
     LCP_FCP:'lcp_fcp',
-    TBT: 'tbt'
+    TBT: 'tbt',
+    CLS: 'cls'
 }
 
 function getMode(){
@@ -20,6 +21,12 @@ function getMode(){
         return {mode: mode.TBT,tbt: tbt_number, fcp: fcp_number}
     }
 
+    const cls = urlParams.get('cls')
+    const cls_number = new Number(cls)
+    if (cls!== null && cls_number>=0 && cls_number <=1){
+        return {mode: mode.CLS, cls: cls_number }
+    }
+return {}
 }
 
 module.exports = {mode, getMode}
