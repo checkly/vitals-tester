@@ -17,7 +17,7 @@ if (current_mode.mode === mode.TBT){
 }
 
 if (current_mode.mode === mode.CLS){
-    window.setTimeout(showFCPBox, 0)
+
     simulateCls(current_mode.cls)
     return
 }
