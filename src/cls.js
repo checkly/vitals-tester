@@ -1,6 +1,7 @@
 
    const intViewportHeight = document.documentElement.clientHeight
    const intViewportWidth = document.documentElement.clientWidth
+   const delay = 5
 
 function largestDimension() {
     return Math.max(intViewportHeight, intViewportWidth)
@@ -15,7 +16,11 @@ function getPercent(percent){
  
     return `${largestDimension()*percent/100}px`
 }
-
+function addPercent(percent, prop) {
+    const n = new Number(prop.replace("px", ""))
+    const pixels = largestDimension()*percent/100
+    return `${n+pixels}px`
+}
 function width(){
     return `${intViewportWidth}px`
 }
@@ -46,27 +51,28 @@ function createVerticalContentfulBlock(){
     document.getElementById('content').appendChild(p)
 }
 
-function move(){
-    window.setTimeout(()=>{
-   
+async function move(el, times){
+    for (let i = 0; i<times; i++)
+        await moveBy(el,5)
     
-        const p = document.getElementsByTagName('p')[0]
+}
+ function moveBy(el, percent) {
+     
+    return new Promise((resolve)=>{
+        
+    window.setTimeout(()=>{
+        console.log(addPercent(percent, el.style.left))
+    
+       
             
             
             if (!horizontal())
-            p.style.left = getPercent(5)
+            el.style.left = addPercent(percent, el.style.left)
             else 
-            p.style.top = getPercent(5)
-            
-            window.setTimeout(()=>{
-           
-            
-                const p = document.getElementsByTagName('p')[0]
-                    
-            
-                    //p.style.top = 1600+'px'
-                }, 500)
-        }, 1000)
+            el.style.top = addPercent(percent, el.style.top)
+            resolve()
+        }, delay)
+    })
 }
 
 function simulateCls(desiredCls) {
@@ -74,13 +80,13 @@ function simulateCls(desiredCls) {
 if (horizontal()){
     console.log("horizontal")
     createHorizontalContentfulBlock()
-    
-move()}
+    const el = document.getElementsByTagName('p')[0]
+move(el, 5)}
     else{
         console.log("vertical")
         createVerticalContentfulBlock()
-        
-move()}
+        const el = document.getElementsByTagName('p')[0]
+move(el, 5)}
 
 
 
