@@ -1,24 +1,34 @@
 const { showFCPBox, showLCPBox } = require('./lcp-fcp')
-const {mode, getMode} = require('./urlparser')
+const {mode, parseConfig} = require('./urlparser')
 const {simulateBlocking} = require('./tbt') 
 const {simulateCls} = require('./cls')
 
-const current_mode = getMode()
-if (current_mode.mode === mode.LCP_FCP){
-    window.setTimeout(showLCPBox, current_mode.lcp)
-    window.setTimeout(showFCPBox, current_mode.fcp)
+function randomize(number, config) {
+    if (!config.random){
+        return
+    }
+    let max = Math.abs(config.random)
+    let min = -max
+    const value = Math.random() * (max - min) + min;
+    return Math.max (0, number + value)
+}
+
+const config = parseConfig()
+if (config.mode === mode.LCP_FCP){
+    window.setTimeout(showLCPBox, config.lcp)
+    window.setTimeout(showFCPBox, config.fcp)
     return
 }
 
-if (current_mode.mode === mode.TBT){
-    window.setTimeout(showFCPBox, current_mode.fcp)
-    simulateBlocking(current_mode.tbt)
+if (config.mode === mode.TBT){
+    window.setTimeout(showFCPBox, config.fcp)
+    simulateBlocking(config.tbt)
     return
 }
 
-if (current_mode.mode === mode.CLS){
-
-    simulateCls(current_mode.cls)
+if (config.mode === mode.CLS){
+console.log("rnd"+randomize(config.cls, config))
+    simulateCls(randomize(config.cls, config))
     return
 }
 document.write('none')
