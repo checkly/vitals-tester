@@ -1,3 +1,5 @@
+const {randomize} = require('./utils')
+
 const intViewportHeight = document.documentElement.clientHeight
 const intViewportWidth = document.documentElement.clientWidth
 // if we go too fast here, it will create flaky metric results
@@ -101,8 +103,8 @@ function howMany(desiredCls) {
     return {fullRuns: fullRuns, extraSteps: extraSteps, count: create, delay: delay}
 }
 
-function simulateCls(desiredCls) {
-    console.log(desiredCls)
+function simulateCls(overallconfig) {
+    const desiredCls = randomize(overallconfig.cls, overallconfig)
     const config = howMany(desiredCls)
     if (horizontal()) {
         console.log("horizontal")
