@@ -1,4 +1,4 @@
-const { showFCPBox, showLCPBox } = require('./lcp-fcp')
+const {showFCPBox, showLCPBox} = require('./lcp-fcp')
 const {mode, parseConfig} = require('./urlparser')
 const {simulateBlocking} = require('./tbt')
 const {simulateCls} = require('./cls')
@@ -21,9 +21,8 @@ if (config.mode === mode.CLS) {
     return
 }
 
-if (current_mode.mode === mode.CLS){
-
-    simulateCls(current_mode.cls)
+if (config.mode === mode.CLS) {
+    simulateCls(config)
     return
 }
 document.write('none')
