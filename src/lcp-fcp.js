@@ -16,18 +16,20 @@ function showLCPBox() {
 function simulateFCPLCP(config) {
     let fcp = 0
     if (config.fcp!==0) {
+        config.random = config.random_fcp
         fcp = Math.floor(randomize(config.fcp, config))
     }
 
     let lcp = config.lcp
     if (config.fcp !== config.lcp) {
+        config.random = config.random_lcp
         lcp = Math.floor(randomize(config.lcp, config))
 
     }
     lcp = Math.max(lcp, fcp)
 
     window.setTimeout(showLCPBox, lcp)
-    window.setTimeout(()=>{showFCPBox(`lcp:${lcp} fcp:${fcp} type:${config.type} random:${config.random}`)},fcp )
+    window.setTimeout(()=>{showFCPBox(`lcp:${lcp} fcp:${fcp} type:${config.type}`)},fcp )
 }
 
 module.exports = {showFCPBox, simulateFCPLCP}

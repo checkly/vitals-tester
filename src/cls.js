@@ -20,7 +20,7 @@ function getPercent(percent) {
 }
 
 function addPercent(percent, prop) {
-    const n = new Number(prop.replace("px", ""))
+    const n = Number(prop.replace("px", ""))
     const pixels = largestDimension() * percent / 100
     return `${n + pixels}px`
 }
@@ -73,8 +73,8 @@ async function move(el, times) {
 
 function moveBy(el, percent) {
     if (el.getAttribute('id') === 'partial') {
-        const max = new Number(el.getAttribute('max-steps'))
-        let current = new Number(el.getAttribute('steps'))
+        const max = Number(el.getAttribute('max-steps'))
+        let current = Number(el.getAttribute('steps'))
         current++
         if (current > max) return
         el.setAttribute('steps', current)
@@ -107,7 +107,7 @@ function simulateCls(overallconfig) {
     const desiredCls = randomize(overallconfig.cls, overallconfig)
     const config = howMany(desiredCls)
     if (horizontal()) {
-        console.log("horizontal")
+
         for (let n = 0; n < config.count; n++)
             createHorizontalContentfulBlock()
         const elems = document.getElementsByTagName('p')
@@ -116,7 +116,7 @@ function simulateCls(overallconfig) {
         elems[0].setAttribute('steps', 0)
         moveAll(elems, 20)
     } else {
-        console.log("vertical")
+
 
 
         for (let n = 0; n < config.count; n++)
