@@ -1,4 +1,5 @@
 const {
+    WEB_VITALS_METRICS,
     WEB_VITALS_SCORES,
     WEB_VITALS_SCORE_THRESHOLDS_DESKTOP,
     WEB_VITALS_SCORE_THRESHOLDS_MOBILE
@@ -11,33 +12,27 @@ const mode = {
 }
 
 const type = {
-    DESKTOP: 'desktop',
-    MOBILE: 'mobile'
+    DESKTOP: 'DESKTOP',
+    MOBILE: 'MOBILE'
 }
 
-function hasCategoryTbt(metric, desiredType) {
+function hasCategory(metric, thresholds, current_mode) {
     const score = Object.entries(WEB_VITALS_SCORES).find(x => x[1] === metric)
     if (!score) {
         return
     }
 
-    let thresholds = WEB_VITALS_SCORE_THRESHOLDS_DESKTOP;
-
-    if (desiredType === type.MOBILE) {
-        thresholds = WEB_VITALS_SCORE_THRESHOLDS_MOBILE
-        console.log("mobile")
-    }
     if (metric === WEB_VITALS_SCORES.GOOD) {
-        return {tbt: thresholds.TBT[0] / 2, random: thresholds.TBT[0] / 2 - 1}
+        return {[current_mode]: thresholds[0] / 2, random: thresholds[0] / 2 - 1}
     }
     if (metric === WEB_VITALS_SCORES.POOR) {
-        const center = (thresholds.TBT[1] + thresholds.TBT[2]) / 2
-        return {tbt: center, random: thresholds.TBT[2] - center - 1}
+        const center = (thresholds[1] + thresholds[2]) / 2
+        return {[current_mode]: center, random: thresholds[2] - center - 1}
     }
 
     if (metric === WEB_VITALS_SCORES.NEEDS_IMPROVEMENT) {
-        const center = (thresholds.TBT[0] + thresholds.TBT[1]) / 2
-        return {tbt: center, random: thresholds.TBT[1] - center - 1}
+        const center = (thresholds[0] + thresholds[1]) / 2
+        return {[current_mode]: center, random: thresholds[1] - center - 1}
     }
 }
 
@@ -57,23 +52,33 @@ function parseConfig() {
     }
 
     result.type = type.DESKTOP
+
     if (type.MOBILE === urlParams.get('type')) {
         result.type = type.MOBILE
     }
 
+    let thresholds = WEB_VITALS_SCORE_THRESHOLDS_DESKTOP;
+
+    if (result.type === type.MOBILE) {
+        thresholds = WEB_VITALS_SCORE_THRESHOLDS_MOBILE
+
+    }
+
+
     if (lcp !== null && lcp_number !== NaN) {
-        result = {mode: mode.LCP_FCP, lcp: lcp_number, fcp: fcp_number}
+        result = {mode: mode.LCP_FCP, lcp: lcp_number, fcp: fcp_number, type: result.type}
     }
 
     const tbt = urlParams.get('tbt')
     tbt_number = new Number(tbt)
     if (tbt !== null && tbt_number !== NaN) {
-        result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number}
+        result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number, type: result.type}
     }
 
-    const tbtCategory = hasCategoryTbt(tbt, result.type)
+
+    const tbtCategory = hasCategory(tbt, thresholds.TBT, mode.TBT)
     if (tbtCategory) {
-        result = {mode: mode.TBT, tbt: tbtCategory.tbt, random: tbtCategory.random}
+        result = {mode: mode.TBT, tbt: tbtCategory.tbt, random: tbtCategory.random, type: result.type}
     }
 
     const cls = urlParams.get('cls')
