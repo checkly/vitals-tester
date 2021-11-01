@@ -12,7 +12,7 @@ if (config.mode === mode.LCP_FCP) {
 
 if (config.mode === mode.TBT) {
     window.setTimeout(showFCPBox, config.fcp)
-    simulateBlocking(config.tbt)
+    simulateBlocking(config)
     return
 }
 
@@ -21,8 +21,4 @@ if (config.mode === mode.CLS) {
     return
 }
 
-if (config.mode === mode.CLS) {
-    simulateCls(config)
-    return
-}
 document.write('none')

@@ -1,3 +1,5 @@
+const {randomize} = require('./utils')
+
 function sleep(milliseconds) {
     const start = new Date().getTime()
     for (let i = 0; i < Infinity; i++) {
@@ -7,7 +9,8 @@ function sleep(milliseconds) {
     }
 }
 
-function simulateBlocking(desiredBlockingTime) {
+function simulateBlocking(config) {
+    const desiredBlockingTime = randomize(config.tbt, config)
     sleep(desiredBlockingTime + 50)
 }
 
