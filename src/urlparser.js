@@ -64,10 +64,15 @@ function parseConfig() {
 
     }
 
+    if (fcp !== null && fcp_number !== NaN) {
+        result = {mode: mode.LCP_FCP, lcp: fcp_number, fcp: fcp_number, type: result.type, random: result.random}
+    }
 
     if (lcp !== null && lcp_number !== NaN) {
-        result = {mode: mode.LCP_FCP, lcp: lcp_number, fcp: fcp_number, type: result.type}
+        result = {mode: mode.LCP_FCP, lcp: Math.max(lcp_number, fcp_number), fcp: fcp_number, type: result.type, random: result.random}
     }
+
+
 
     const tbt = urlParams.get('tbt')
     const tbt_number = new Number(tbt)
