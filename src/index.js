@@ -1,17 +1,15 @@
-const {showFCPBox, showLCPBox} = require('./lcp-fcp')
+const {simulateFCPLCP} = require('./lcp-fcp')
 const {mode, parseConfig} = require('./urlparser')
 const {simulateBlocking} = require('./tbt')
 const {simulateCls} = require('./cls')
 
 const config = parseConfig()
 if (config.mode === mode.LCP_FCP) {
-    window.setTimeout(showLCPBox, config.lcp)
-    window.setTimeout(showFCPBox, config.fcp)
+    simulateFCPLCP(config)
     return
 }
 
 if (config.mode === mode.TBT) {
-    window.setTimeout(showFCPBox, config.fcp)
     simulateBlocking(config)
     return
 }

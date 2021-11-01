@@ -11,4 +11,9 @@ function showLCPBox() {
 
 }
 
-module.exports = {showFCPBox, showLCPBox}
+function simulateFCPLCP(config) {
+    window.setTimeout(showLCPBox, config.lcp)
+    window.setTimeout(showFCPBox, config.fcp)
+}
+
+module.exports = {showFCPBox, simulateFCPLCP}

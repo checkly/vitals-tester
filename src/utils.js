@@ -1,6 +1,6 @@
 function randomize(number, config) {
     if (!config.random) {
-        return
+        return number
     }
     let max = Math.abs(config.random)
     let min = -max
