@@ -4,6 +4,11 @@ const mode = {
     CLS: 'cls'
 }
 
+const type = {
+    DESKTOP: 'desktop',
+    MOBILE: 'mobile'
+}
+
 function parseConfig() {
     const urlParams = new URLSearchParams(window.location.search);
     const lcp = urlParams.get('lcp')
@@ -34,6 +39,13 @@ function parseConfig() {
     if (random !== null && random_number !== NaN) {
         result.random = random_number
     }
+
+    result.type = type.DESKTOP
+    if (type.MOBILE === urlParams.get('type')) {
+        result.type = type.MOBILE
+    }
+
+
     return result
 }
 
