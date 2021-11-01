@@ -23,16 +23,16 @@ function hasCategory(metric, thresholds, current_mode) {
     }
 
     if (metric === WEB_VITALS_SCORES.GOOD) {
-        return {[current_mode]: thresholds[0] / 2, random: thresholds[0] / 2 - 1}
+        return {[current_mode]: thresholds[0] / 2, random: thresholds[0] / 2}
     }
     if (metric === WEB_VITALS_SCORES.POOR) {
         const center = (thresholds[1] + thresholds[2]) / 2
-        return {[current_mode]: center, random: thresholds[2] - center - 1}
+        return {[current_mode]: center, random: thresholds[2] - center}
     }
 
     if (metric === WEB_VITALS_SCORES.NEEDS_IMPROVEMENT) {
         const center = (thresholds[0] + thresholds[1]) / 2
-        return {[current_mode]: center, random: thresholds[1] - center - 1}
+        return {[current_mode]: center, random: thresholds[1] - center}
     }
 }
 
@@ -70,7 +70,7 @@ function parseConfig() {
     }
 
     const tbt = urlParams.get('tbt')
-    tbt_number = new Number(tbt)
+    const tbt_number = new Number(tbt)
     if (tbt !== null && tbt_number !== NaN) {
         result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number, type: result.type}
     }
@@ -85,6 +85,10 @@ function parseConfig() {
     const cls_number = new Number(cls)
     if (cls !== null && cls_number >= 0 && cls_number <= 1) {
         result = {mode: mode.CLS, cls: cls_number}
+    }
+    const clsCategory = hasCategory(cls, thresholds.CLS, mode.CLS)
+    if (clsCategory) {
+        result = {mode: mode.CLS, cls: clsCategory.cls, random: clsCategory.random, type: result.type}
     }
 
     return result
