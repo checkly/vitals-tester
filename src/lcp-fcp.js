@@ -1,3 +1,5 @@
+const {randomize} = require("./utils");
+
 function showFCPBox() {
     const p = document.createElement('p')
     p.textContent = 'a'
@@ -11,4 +13,10 @@ function showLCPBox() {
 
 }
 
-module.exports = {showFCPBox, showLCPBox}
+function simulateFCPLCP(config) {
+
+    window.setTimeout(showLCPBox, randomize(config.lcp, config))
+    window.setTimeout(showFCPBox, randomize(config.fcp, config))
+}
+
+module.exports = {showFCPBox, simulateFCPLCP}

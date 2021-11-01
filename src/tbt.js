@@ -1,3 +1,6 @@
+const {randomize} = require('./utils')
+const {showFCPBox} = require("./lcp-fcp");
+
 function sleep(milliseconds) {
     const start = new Date().getTime()
     for (let i = 0; i < Infinity; i++) {
@@ -7,7 +10,9 @@ function sleep(milliseconds) {
     }
 }
 
-function simulateBlocking(desiredBlockingTime) {
+function simulateBlocking(config) {
+    showFCPBox()
+    const desiredBlockingTime = randomize(config.tbt, config)
     sleep(desiredBlockingTime + 50)
 }
 
