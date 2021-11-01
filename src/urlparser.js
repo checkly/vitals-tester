@@ -1,3 +1,9 @@
+const {
+    WEB_VITALS_SCORES,
+    WEB_VITALS_SCORE_THRESHOLDS_DESKTOP,
+    WEB_VITALS_SCORE_THRESHOLDS_MOBILE
+} = require('./constants')
+
 const mode = {
     LCP_FCP: 'lcp_fcp',
     TBT: 'tbt',
@@ -9,6 +15,32 @@ const type = {
     MOBILE: 'mobile'
 }
 
+function hasCategoryTbt(metric, desiredType) {
+    const score = Object.entries(WEB_VITALS_SCORES).find(x => x[1] === metric)
+    if (!score) {
+        return
+    }
+
+    let thresholds = WEB_VITALS_SCORE_THRESHOLDS_DESKTOP;
+
+    if (desiredType === type.MOBILE) {
+        thresholds = WEB_VITALS_SCORE_THRESHOLDS_MOBILE
+        console.log("mobile")
+    }
+    if (metric === WEB_VITALS_SCORES.GOOD) {
+        return {tbt: thresholds.TBT[0] / 2, random: thresholds.TBT[0] / 2 - 1}
+    }
+    if (metric === WEB_VITALS_SCORES.POOR) {
+        const center = (thresholds.TBT[1] + thresholds.TBT[2]) / 2
+        return {tbt: center, random: thresholds.TBT[2] - center - 1}
+    }
+
+    if (metric === WEB_VITALS_SCORES.NEEDS_IMPROVEMENT) {
+        const center = (thresholds.TBT[0] + thresholds.TBT[1]) / 2
+        return {tbt: center, random: thresholds.TBT[1] - center - 1}
+    }
+}
+
 function parseConfig() {
     const urlParams = new URLSearchParams(window.location.search);
     const lcp = urlParams.get('lcp')
@@ -18,22 +50,6 @@ function parseConfig() {
 
 
     let result = {}
-    if (lcp !== null && lcp_number !== NaN) {
-        result = {mode: mode.LCP_FCP, lcp: lcp_number, fcp: fcp_number}
-    }
-
-    const tbt = urlParams.get('tbt')
-    tbt_number = new Number(tbt)
-    if (tbt !== null && tbt_number !== NaN) {
-        result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number}
-    }
-
-    const cls = urlParams.get('cls')
-    const cls_number = new Number(cls)
-    if (cls !== null && cls_number >= 0 && cls_number <= 1) {
-        result = {mode: mode.CLS, cls: cls_number}
-    }
-
     const random = urlParams.get('random')
     const random_number = new Number(random)
     if (random !== null && random_number !== NaN) {
@@ -45,6 +61,26 @@ function parseConfig() {
         result.type = type.MOBILE
     }
 
+    if (lcp !== null && lcp_number !== NaN) {
+        result = {mode: mode.LCP_FCP, lcp: lcp_number, fcp: fcp_number}
+    }
+
+    const tbt = urlParams.get('tbt')
+    tbt_number = new Number(tbt)
+    if (tbt !== null && tbt_number !== NaN) {
+        result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number}
+    }
+
+    const tbtCategory = hasCategoryTbt(tbt, result.type)
+    if (tbtCategory) {
+        result = {mode: mode.TBT, tbt: tbtCategory.tbt, random: tbtCategory.random}
+    }
+
+    const cls = urlParams.get('cls')
+    const cls_number = new Number(cls)
+    if (cls !== null && cls_number >= 0 && cls_number <= 1) {
+        result = {mode: mode.CLS, cls: cls_number}
+    }
 
     return result
 }

@@ -11,9 +11,11 @@ function sleep(milliseconds) {
 }
 
 function simulateBlocking(config) {
-    showFCPBox()
-    const desiredBlockingTime = randomize(config.tbt, config)
-    sleep(desiredBlockingTime + 50)
+    const desiredBlockingTime = Math.floor(randomize(config.tbt, config))
+    showFCPBox(`blocking time will be: ${desiredBlockingTime}`)
+    if (desiredBlockingTime) {
+        sleep(desiredBlockingTime + 50)
+    }
 }
 
 module.exports = {simulateBlocking}

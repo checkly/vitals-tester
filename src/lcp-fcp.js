@@ -1,8 +1,8 @@
 const {randomize} = require("./utils");
 
-function showFCPBox() {
+function showFCPBox(text) {
     const p = document.createElement('p')
-    p.textContent = 'a'
+    p.textContent = text ? text : 'a'
     var el = document.getElementById('content').appendChild(p)
 }
 
