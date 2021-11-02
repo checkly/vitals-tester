@@ -100,15 +100,18 @@ function howMany(desiredCls) {
     if (create > 5) {
         delay = 20
     }
-    return {fullRuns: fullRuns, extraSteps: extraSteps, count: create, delay: delay}
+    return {fullRuns: fullRuns, extraSteps: extraSteps, createdParagraphs: create, delay: delay}
 }
 
 function simulateCls(overallconfig) {
+    console.log(overallconfig)
     const desiredCls = randomize(overallconfig.cls, overallconfig)
+    console.log("desiredCLS:"+desiredCls)
     const config = howMany(desiredCls)
+    console.log(config)
     if (horizontal()) {
 
-        for (let n = 0; n < config.count; n++)
+        for (let n = 0; n < config.createdParagraphs; n++)
             createHorizontalContentfulBlock()
         const elems = document.getElementsByTagName('p')
         elems[0].setAttribute('id', 'partial')
@@ -119,7 +122,7 @@ function simulateCls(overallconfig) {
 
 
 
-        for (let n = 0; n < config.count; n++)
+        for (let n = 0; n < config.createdParagraphs; n++)
             createVerticalContentfulBlock()
         const elems = document.getElementsByTagName('p')
         elems[0].setAttribute('id', 'partial')

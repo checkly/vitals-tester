@@ -14,8 +14,9 @@ function showLCPBox() {
 }
 
 function simulateFCPLCP(config) {
+    console.log(config)
     let fcp = 0
-    if (config.fcp!==0) {
+    if (config.fcp !== 0) {
         config.random = config.random_fcp
         fcp = Math.floor(randomize(config.fcp, config))
     }
@@ -27,9 +28,11 @@ function simulateFCPLCP(config) {
 
     }
     lcp = Math.max(lcp, fcp)
-
+    console.log(`final fcp:${fcp} lcp:${lcp}`)
     window.setTimeout(showLCPBox, lcp)
-    window.setTimeout(()=>{showFCPBox(`lcp:${lcp} fcp:${fcp} type:${config.type}`)},fcp )
+    window.setTimeout(() => {
+        showFCPBox(`lcp:${lcp} fcp:${fcp} type:${config.type}`)
+    }, fcp)
 }
 
 module.exports = {showFCPBox, simulateFCPLCP}
