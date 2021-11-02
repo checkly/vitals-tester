@@ -12,7 +12,7 @@ function sleep(milliseconds) {
 
 function simulateBlocking(config) {
     const desiredBlockingTime = Math.floor(randomize(config.tbt, config))
-    console.log(config)
+    console.log(JSON.stringify(config))
     console.log(`blocking for:${desiredBlockingTime}ms`)
     showFCPBox(`blocking time will be: ${desiredBlockingTime} (${config.type} threshold)`)
     if (desiredBlockingTime) {
