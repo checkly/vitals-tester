@@ -1,5 +1,4 @@
 const {
-    WEB_VITALS_METRICS,
     WEB_VITALS_SCORES,
     WEB_VITALS_SCORE_THRESHOLDS_DESKTOP,
     WEB_VITALS_SCORE_THRESHOLDS_MOBILE
@@ -16,12 +15,13 @@ const type = {
     MOBILE: 'MOBILE'
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+
 function hasCategory(metric, thresholds, current_mode) {
     const score = Object.entries(WEB_VITALS_SCORES).find(x => x[1] === metric)
     if (!score) {
         return
     }
-
     if (metric === WEB_VITALS_SCORES.GOOD) {
         return {[current_mode]: thresholds[0] / 2, random: thresholds[0] / 2}
     }
@@ -36,81 +36,144 @@ function hasCategory(metric, thresholds, current_mode) {
     }
 }
 
-function parseConfig() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const lcp = urlParams.get('lcp')
-    const fcp = urlParams.get('fcp')
-    const lcp_number = Number(lcp)
-    const fcp_number = Number(fcp)
+function isDefined(metric) {
+    const defined = urlParams.get(metric)
+    if (defined === null) {
+        return {defined: false}
+    }
+    const num = Number(defined)
+    if (!Number.isNaN(num)) {
+        return {defined: true, number: true, value: num}
+    }
 
+    const score = Object.entries(WEB_VITALS_SCORES).find(x => x[1] === defined)
+    if (!score) {
+        return {defined: false}
+    }
+    return {defined: true, number: false, value: score}
+}
 
-    let result = {}
+function handleLcpAndFcp(lcp_defined, fcp_defined, thresholds) {
+    const lcp_result = handleLcp(lcp_defined, thresholds)
+    const fcp_result = handleFcp(fcp_defined, thresholds)
+    return {
+        mode: mode.LCP_FCP,
+        fcp: fcp_result.fcp,
+        random: getRandom(),
+        random_fcp: fcp_result.random_fcp,
+        random_lcp: lcp_result.random_lcp,
+        lcp: lcp_result.lcp
+    }
+}
+
+function handleFcp(definition, thresholds) {
+    if (definition.number) {
+        return {
+            mode: mode.LCP_FCP,
+            fcp: definition.value,
+            lcp: definition.value + 1,
+            random_lcp: 0,
+            random_fcp: getRandom(),
+        }
+    }
+    if (!definition.defined) {
+        return
+    }
+    const category = hasCategory(definition.value[1], thresholds.FCP, mode.LCP_FCP)
+
+    if (category) {
+        return {
+            mode: mode.LCP_FCP,
+            fcp: category.lcp_fcp,
+            lcp: category.lcp_fcp,
+            random_fcp: category.random,
+            random_lcp: 0
+        }
+    }
+}
+
+function handleLcp(definition, thresholds) {
+    if (definition.number) {
+        return {
+            mode: mode.LCP_FCP,
+            lcp: definition.value,
+            fcp: 0,
+            random_fcp: 0,
+            random_lcp: getRandom()
+        }
+    }
+    if (!definition.defined) {
+        return
+    }
+    const category = hasCategory(definition.value[1], thresholds.LCP, mode.LCP_FCP)
+    if (category) {
+        return {
+            mode: mode.LCP_FCP,
+            lcp: category.lcp_fcp,
+            fcp: 0,
+            random_fcp: 0,
+            random_lcp: category.random,
+        }
+    }
+}
+
+function getRandom() {
     const random = urlParams.get('random')
     const random_number = Number(random)
     if (random !== null && !Number.isNaN(random_number)) {
-        result.random = random_number
+        return random_number
     }
+    return null
+}
 
-    result.type = type.DESKTOP
-
-    if (type.MOBILE === urlParams.get('type')) {
-        result.type = type.MOBILE
-    }
+function parseConfig() {
+    const lcp_defined = isDefined('lcp')
+    const fcp_defined = isDefined('fcp')
 
     let thresholds = WEB_VITALS_SCORE_THRESHOLDS_DESKTOP;
+    let result_type = type.DESKTOP
 
-    if (result.type === type.MOBILE) {
+    if (type.MOBILE === urlParams.get('type')) {
+        result_type = type.MOBILE
+    }
+    if (result_type === type.MOBILE) {
         thresholds = WEB_VITALS_SCORE_THRESHOLDS_MOBILE
-
     }
 
-    if (fcp !== null && !Number.isNaN(fcp_number)) {
-        result = {mode: mode.LCP_FCP, lcp: fcp_number, fcp: fcp_number, type: result.type, random_fcp: result.random}
+    if (lcp_defined.defined && fcp_defined.defined) {
+        return handleLcpAndFcp(lcp_defined, fcp_defined, thresholds)
     }
-    const fcpCategory = hasCategory(fcp, thresholds.FCP, mode.LCP_FCP)
-
-    if (fcpCategory) {
-        result = {mode: mode.LCP_FCP, fcp: fcpCategory.lcp_fcp, random_fcp: fcpCategory.random, type: result.type}
+    if (lcp_defined.defined) {
+        return handleLcp(lcp_defined, thresholds)
     }
-
-if (!result.mode === mode.LCP_FCP){
-    result = {fcp_number: 0, random_fcp: 0}
-}
-    if (lcp !== null &&  !Number.isNaN(lcp_number)) {
-        result = {mode: mode.LCP_FCP, lcp: Math.max(lcp_number, result.fcp), type: result.type, random_lcp: result.random, ...result}
-    }
-    const lcpCategory = hasCategory(lcp, thresholds.LCP, mode.LCP_FCP)
-
-    if (lcpCategory) {
-        result = {mode: mode.LCP_FCP, lcp: lcpCategory.lcp_fcp, random_lcp: lcpCategory.random, type: result.type, ...result}
+    if (fcp_defined.defined) {
+        return handleFcp(fcp_defined, thresholds)
     }
 
-if (result.mode === mode.LCP_FCP){
-    return result
-}
-
+    let result = {}
+    const random = getRandom()
 
 
     const tbt = urlParams.get('tbt')
     const tbt_number = Number(tbt)
     if (tbt !== null && !Number.isNaN(tbt_number)) {
-        result = {mode: mode.TBT, tbt: tbt_number, fcp: fcp_number, type: result.type}
+        result = {mode: mode.TBT, tbt: tbt_number, fcp: 0, type: result_type, random: random}
     }
 
 
     const tbtCategory = hasCategory(tbt, thresholds.TBT, mode.TBT)
     if (tbtCategory) {
-        result = {mode: mode.TBT, tbt: tbtCategory.tbt, random: tbtCategory.random, type: result.type}
+        result = {mode: mode.TBT, tbt: tbtCategory.tbt, random: tbtCategory.random, type: result_type}
     }
 
     const cls = urlParams.get('cls')
     const cls_number = Number(cls)
     if (cls !== null && cls_number >= 0 && cls_number <= 1) {
-        result = {mode: mode.CLS, cls: cls_number, random: result.random}
+        result = {mode: mode.CLS, cls: cls_number, random: random}
     }
     const clsCategory = hasCategory(cls, thresholds.CLS, mode.CLS)
     if (clsCategory) {
-        result = {mode: mode.CLS, cls: clsCategory.cls, random: clsCategory.random, type: result.type}
+        result = {mode: mode.CLS, cls: clsCategory.cls, random: clsCategory.random, type: result_type}
     }
 
     return result
