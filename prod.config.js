@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlInlineScriptPlugin = require('html-inline-script-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const path = require('path');
 
@@ -14,5 +15,10 @@ module.exports = {
     template: './src/template.html',
     inject: 'body'
   }),
-  new HtmlInlineScriptPlugin()],
+  new HtmlInlineScriptPlugin(),
+    new CopyPlugin({
+      patterns: [
+        { from: "static", to: "static" }
+      ],
+    }),],
 };
