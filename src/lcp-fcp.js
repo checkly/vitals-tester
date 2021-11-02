@@ -3,18 +3,18 @@ const {randomize} = require("./utils");
 function showFCPBox(text) {
     const p = document.createElement('p')
     p.textContent = text ? text : 'a'
-    var el = document.getElementById('content').appendChild(p)
+    document.getElementById('content').appendChild(p)
 }
 
 function showLCPBox() {
     const p = document.createElement('p')
     p.textContent = 'This is the largest contentful paint This is the largest contentful paint This is the largest contentful paint This is the largest contentful paint'
-    var el = document.getElementById('content').appendChild(p)
+    document.getElementById('content').appendChild(p)
 
 }
 
 function simulateFCPLCP(config) {
-    console.log(config)
+    console.log(JSON.stringify(config))
     let fcp = 0
     if (config.fcp !== 0) {
         config.random = config.random_fcp
@@ -28,7 +28,7 @@ function simulateFCPLCP(config) {
 
     }
     lcp = Math.max(lcp, fcp)
-    console.log(`final fcp:${fcp} lcp:${lcp}`)
+    console.log(`final fcp:${fcp}ms lcp:${lcp}ms`)
     window.setTimeout(showLCPBox, lcp)
     window.setTimeout(() => {
         showFCPBox(`lcp:${lcp} fcp:${fcp} type:${config.type}`)

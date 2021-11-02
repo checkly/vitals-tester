@@ -104,11 +104,11 @@ function howMany(desiredCls) {
 }
 
 function simulateCls(overallconfig) {
-    console.log(overallconfig)
+    console.log(JSON.stringify(overallconfig))
     const desiredCls = randomize(overallconfig.cls, overallconfig)
-    console.log("desiredCLS:"+desiredCls)
+    console.log("desiredCLS:" + desiredCls)
     const config = howMany(desiredCls)
-    console.log(config)
+    console.log(JSON.stringify(config))
     if (horizontal()) {
 
         for (let n = 0; n < config.createdParagraphs; n++)
@@ -119,7 +119,6 @@ function simulateCls(overallconfig) {
         elems[0].setAttribute('steps', 0)
         moveAll(elems, 20)
     } else {
-
 
 
         for (let n = 0; n < config.createdParagraphs; n++)
