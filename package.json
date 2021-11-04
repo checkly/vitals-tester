@@ -21,6 +21,7 @@
     "webpack": "^5.61.0"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^9.0.1",
     "html-inline-script-webpack-plugin": "^2.0.2",
     "webpack-cli": "^4.9.1"
   }

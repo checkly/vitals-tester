@@ -19,4 +19,18 @@ if (config.mode === mode.CLS) {
     return
 }
 
-document.write('none')
+
+
+const xhr = new XMLHttpRequest()
+xhr.open('GET', 'static/intro.html', true)
+xhr.onreadystatechange = function () {
+    if (this.readyState !== 4) {
+        return
+    }
+    if (this.status !== 200) {
+        return
+    }
+    //document.getElementById('content').innerHTML = this.responseText
+    document.write(this.responseText)
+};
+xhr.send();
