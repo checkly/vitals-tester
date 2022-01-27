@@ -10,6 +10,7 @@ function sleep(milliseconds) {
     }
 }
 
+//does not really work to simulate a high FID
 function addButton(desiredBlockingTime){
     const button = document.createElement('button')
     button.textContent="TEST BUTTON"
@@ -24,7 +25,7 @@ function simulateBlocking(config) {
     console.log(JSON.stringify(config))
     console.log(`blocking for:${desiredBlockingTime}ms`)
     showFCPBox(`blocking time will be: ${desiredBlockingTime} (${config.type} threshold)`)
-    addButton(desiredBlockingTime)
+    
     if (desiredBlockingTime) {
         sleep(desiredBlockingTime + 50)
     }
