@@ -10,11 +10,18 @@ function sleep(milliseconds) {
     }
 }
 
+function addButton(){
+    const button = document.createElement('button')
+    button.textContent="TEST BUTTON"
+    document.getElementById('content').appendChild(button)
+}
+
 function simulateBlocking(config) {
     const desiredBlockingTime = Math.floor(randomize(config.tbt, config))
     console.log(JSON.stringify(config))
     console.log(`blocking for:${desiredBlockingTime}ms`)
     showFCPBox(`blocking time will be: ${desiredBlockingTime} (${config.type} threshold)`)
+    addButton()
     if (desiredBlockingTime) {
         sleep(desiredBlockingTime + 50)
     }
